@@ -1,0 +1,34 @@
+[Unit]
+Description=DGX Spark Prometheus Exporter
+Documentation=https://github.com/ateska/dgx-spark-prometheus
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/dgx-spark-prometheus -listen :9835
+Restart=on-failure
+RestartSec=5
+
+# Run as root to access nvidia-smi, /proc, and /sys thermal zones
+User=root
+Group=root
+
+# Hardening
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadOnlyPaths=/proc /sys
+PrivateTmp=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=dgx-spark-prometheus
+
+[Install]
+WantedBy=multi-user.target
