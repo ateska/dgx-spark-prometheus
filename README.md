@@ -2,6 +2,9 @@
 
 A Prometheus metrics exporter for NVIDIA DGX Spark systems. It exposes hardware and system metrics via an HTTP endpoint that Prometheus can scrape.
 
+![screenshot](https://github.com/user-attachments/assets/75137a87-da9d-4482-b908-b96e4d8d4489)
+
+
 ## Metrics
 
 | Metric | Type | Description |
