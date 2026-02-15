@@ -23,19 +23,8 @@ A Prometheus metrics exporter for NVIDIA DGX Spark systems. It exposes hardware 
 | `network_receive_packets_total` | Counter | Packets received (label: `interface`) |
 | `network_transmit_packets_total` | Counter | Packets transmitted (label: `interface`) |
 
-### Deriving Rates in PromQL
 
-For counter metrics, use `rate()` or `irate()` in Prometheus to compute per-second rates:
-
-```promql
-# Disk IOPS (read)
-rate(disk_reads_completed_total{device="nvme0n1"}[5m])
-
-# Network throughput in bytes/sec
-rate(network_receive_bytes_total{interface="enP7s7"}[5m])
-```
-
-## Monitored Network Interfaces
+### Monitored Network Interfaces
 
 Only the following interfaces are monitored (when they are up):
 
@@ -45,6 +34,7 @@ Only the following interfaces are monitored (when they are up):
 - `enp1s0f0np0`
 - `enP2p1s0f0np0`
 - `wlP9s9`
+
 
 ## Building and installing
 
