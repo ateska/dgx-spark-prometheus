@@ -42,7 +42,7 @@ Only the following interfaces are monitored (when they are up):
 
 ## Building and installing
 
-Run on the DGX Spark, with the Go language installad, in the root directory of this repository:
+Run on the DGX Spark, with the Go language installed, in the root directory of this repository:
 
 ```bash
 go build .
