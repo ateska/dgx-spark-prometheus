@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Build binaries
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          BUILD_DIR="build"
+          mkdir -p $BUILD_DIR
+
+          PLATFORMS=(
+            "linux/amd64"
+            "linux/arm64"
+            "darwin/amd64"
+            "darwin/arm64"
+            "windows/amd64"
+          )
+
+          for PLATFORM in "${PLATFORMS[@]}"; do
+            IFS='/' read -r GOOS GOARCH <<< "$PLATFORM"
+            BINARY_NAME="dgx-spark-prometheus-${VERSION}-${GOOS}-${GOARCH}"
+            if [ "$GOOS" = "windows" ]; then
+              BINARY_NAME="${BINARY_NAME}.exe"
+            fi
+
+            echo "Building for $GOOS/$GOARCH..."
+            GOOS=$GOOS GOARCH=$GOARCH go build -ldflags="-s -w -X main.Version=${VERSION}" -o "${BUILD_DIR}/${BINARY_NAME}" .
+
+            cd $BUILD_DIR
+            tar -czvf "${BINARY_NAME}.tar.gz" "${BINARY_NAME}"
+            rm "${BINARY_NAME}"
+            cd ..
+          done
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/*.tar.gz
+          generate_release_notes: true
